@@ -1,0 +1,10 @@
+Controls to check if there exists a strategy.
+
+[A strategy is said to be a winning strategy if the controller supervised by the
+strategy always win the game whatever actions are chosen by the environment.]
+
+control: A<> win //“must reach win”
+control: A[ not(lose) U win ] //“must reach win and must avoid lose”
+control: A[ not(lose) W win ] //“should reach win and must avoid lose”
+control: A[] not(lose) //“must avoid lose”
+E<> control: Q //“must satisfy Q with the least help from the environment”
