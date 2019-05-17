@@ -1,4 +1,4 @@
-//This file was generated from UPPAAL 4.0.0-pre2 (rev. 1834), May 2006
+//This file was generated from (Academic) UPPAAL 4.1.4 (rev. 5535), March 2014
 
 /*
 Property is satisfied.
