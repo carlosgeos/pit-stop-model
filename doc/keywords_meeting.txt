@@ -1,0 +1,8 @@
+safety
+liveness
+cost function  (upper buond)
+reachability -> first time you reach is the cost 
+
+average -> min pay off
+
+RANDOM/PROBABIL -> submitted to some law - No - nondeterm
