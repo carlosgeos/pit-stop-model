@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'><nta><declaration>const int PITS = 3;
+const int MECH = PITS*4, MaxNbrOfCyclesLocked=1, MAX_TIME_TO_CHANGE_A_WHEEL=10;
+
+int atPitNbr[PITS+1], locked[PITS], readyToGo[PITS], nbrOfTimesLocked[PITS];
+broadcast chan carInPosition[PITS], wheelsReady[PITS];
+bool wheels[MECH], leaving[PITS];</declaration><template><name x="5" y="5">Mechanic</name><parameter>int[0,PITS-1] pitID,int[0,3] mechID</parameter><declaration>bool isLast;
+clock time;
+
+void setIsLast()
+{
+	int i, result=0;
+	for(i=pitID*4; i&lt;4+pitID*4; ++i)
+	{
+		result+=wheels[i];
+	}
+	isLast=(result==4);
+}</declaration><location id="id0" x="-328" y="352" color="#ffa500"><name x="-344" y="368">Delay</name></location><location id="id1" x="-312" y="-40"><name x="-320" y="-24">Last_To_Be_Ready</name></location><location id="id2" x="-576" y="-272"><name x="-586" y="-302">Wait_For_Last_One</name></location><location id="id3" x="-56" y="200"><name x="-80" y="216">Working</name><label kind="invariant" x="-88" y="240">time&lt;=MAX_TIME_TO_CHANGE_A_WHEEL</label></location><location id="id4" x="-576" y="200" color="#00ff00"><name x="-624" y="208">Done</name><committed/></location><location id="id5" x="-56" y="-272"><name x="-56" y="-304">mech_In_Position</name></location><init ref="id5"/><transition action=""><source ref="id0"/><target ref="id4"/><label kind="assignment" x="-608" y="296">wheels[mechID+pitID*4]:=1, 
+setIsLast()</label></transition><transition controllable="false" action=""><source ref="id3"/><target ref="id0"/><label kind="guard" x="-216" y="296">time&gt;=MAX_TIME_TO_CHANGE_A_WHEEL</label></transition><transition action=""><source ref="id1"/><target ref="id5"/><label kind="synchronisation" x="-400" y="-160">wheelsReady[pitID]!</label><label kind="assignment" x="-400" y="-144">wheels[mechID+pitID*4]:=0</label></transition><transition action=""><source ref="id2"/><target ref="id5"/><label kind="synchronisation" x="-376" y="-312">wheelsReady[pitID]?</label><label kind="assignment" x="-376" y="-296">wheels[mechID+pitID*4]:=0</label></transition><transition action=""><source ref="id4"/><target ref="id1"/><label kind="guard" x="-440" y="80">isLast==1</label><label kind="assignment" x="-440" y="96">readyToGo[pitID]:=1</label></transition><transition action=""><source ref="id4"/><target ref="id2"/><label kind="guard" x="-648" y="-48">isLast==0</label></transition><transition action=""><source ref="id5"/><target ref="id3"/><label kind="synchronisation" x="-48" y="-80">carInPosition[pitID]?</label><label kind="assignment" x="-48" y="-64">time:=0, 
+readyToGo[pitID]:=0</label></transition><transition action=""><source ref="id3"/><target ref="id4"/><label kind="guard" x="-456" y="208">time&lt;MAX_TIME_TO_CHANGE_A_WHEEL</label><label kind="assignment" x="-456" y="224">wheels[mechID+pitID*4]:=1, 
+setIsLast()</label></transition></template><template><name>Pit</name><parameter>int[1, PITS] id</parameter><declaration>int position=-1;
+bool gotLock;
+
+void tryToLockNext()
+{
+	gotLock=0;
+	if(readyToGo[position]==0)
+	{
+		locked[position]=id;
+		gotLock=1;
+	}else if(readyToGo[position]==1)
+	{
+		locked[position]=id;
+		nbrOfTimesLocked[position]++;
+		gotLock=1;
+	}
+}
+
+bool isNextLockable()
+{
+	return nbrOfTimesLocked[position]&lt;=MaxNbrOfCyclesLocked;
+}
+
+void unlockPrevious()
+{
+	if(position&gt;=2 &amp;&amp; locked[(position-1)-1]==id)
+		locked[(position-1)-1]=0;
+}
+
+void driveForward()
+{
+	if(atPitNbr[position+1]==0)
+	{
+		atPitNbr[position+1]=id;
+		atPitNbr[position]=0;
+		position++;
+	}
+	gotLock=0;
+}
+
+bool isThereACrash()
+{
+	if(position&gt;=1)
+		return atPitNbr[position]==-1;
+	return 0;
+}
+
+bool noCarInFront()
+{
+	if(position&lt;PITS)
+	{
+		return 	atPitNbr[position+1]==0;
+	}
+	return 0;
+}
+
+void goOnLane()
+{
+	if(position&gt;=1)
+	{
+		if(atPitNbr[position]!=id &amp;&amp; atPitNbr[position]!=0)
+		{
+			atPitNbr[position]=-1;
+		}else
+		{
+			atPitNbr[id]=id;
+		}
+	}
+}</declaration><location id="id6" x="-248" y="200"><name x="-240" y="168">Wait_To_Go_On_Lane</name></location><location id="id7" x="-632" y="120"><name x="-704" y="88">On_Track</name></location><location id="id8" x="-248" y="72"><name x="-240" y="32">CarInPos</name></location><location id="id9" x="168" y="120" color="#ff0000"><name x="158" y="90">Crash</name></location><location id="id10" x="-248" y="-104"><name x="-376" y="-120">Incoming_Car</name></location><location id="id11" x="-248" y="376" color="#00ff00"><name x="-312" y="360">Leave</name></location><init ref="id7"/><transition action=""><source ref="id6"/><target ref="id11"/><label kind="guard" x="-240" y="264">locked[id-1]==0</label><label kind="assignment" x="-240" y="224">leaving[id-1]:=1,
+goOnLane(), 
+nbrOfTimesLocked[id-1]:=0</label></transition><transition action=""><source ref="id8"/><target ref="id6"/><label kind="synchronisation" x="-240" y="120">wheelsReady[id-1]?</label></transition><transition action=""><source ref="id11"/><target ref="id11"/><label kind="guard" x="-144" y="448">gotLock==0 &amp;&amp; 
+isThereACrash()==0 &amp;&amp;
+position!=PITS &amp;&amp; 
+noCarInFront()==1 &amp;&amp;
+isNextLockable()==1</label><label kind="assignment" x="-144" y="432">tryToLockNext()</label><nail x="-200" y="464"/><nail x="-152" y="424"/></transition><transition action=""><source ref="id10"/><target ref="id10"/><label kind="guard" x="-448" y="-248">position!=id &amp;&amp;
+gotLock==0 &amp;&amp; 
+position+1!=id &amp;&amp;
+isThereACrash()==0 &amp;&amp;
+noCarInFront()==1 &amp;&amp; 
+isNextLockable()==1</label><label kind="assignment" x="-448" y="-264">tryToLockNext()</label><nail x="-304" y="-192"/><nail x="-344" y="-144"/></transition><transition action=""><source ref="id11"/><target ref="id7"/><label kind="guard" x="-768" y="352">position==PITS</label><label kind="assignment" x="-768" y="296">locked[position-1]=(locked[position-1]==id)?0:locked[position-1],
+leaving[id-1]:=0,
+atPitNbr[position]=0,
+position=-1</label></transition><transition controllable="false" action=""><source ref="id7"/><target ref="id10"/><label kind="guard" x="-560" y="-40">position==-1 &amp;&amp;
+noCarInFront()==1</label><label kind="assignment" x="-560" y="-8">atPitNbr[0]:=id,
+position:=0</label></transition><transition controllable="false" action=""><source ref="id11"/><target ref="id9"/><label kind="guard" x="-40" y="256">isThereACrash()==1</label><nail x="-232" y="368"/></transition><transition action=""><source ref="id11"/><target ref="id11"/><label kind="guard" x="-320" y="512">gotLock==1 &amp;&amp;
+isThereACrash()==0 &amp;&amp;
+position!=PITS</label><label kind="assignment" x="-320" y="480">driveForward(), 
+unlockPrevious()</label><nail x="-288" y="472"/><nail x="-224" y="472"/></transition><transition action=""><source ref="id10"/><target ref="id10"/><label kind="guard" x="-280" y="-248">position!=id &amp;&amp;
+(gotLock==1 || position+1==id) &amp;&amp;
+isThereACrash()==0</label><label kind="assignment" x="-280" y="-280">driveForward(), 
+unlockPrevious()</label><nail x="-280" y="-200"/><nail x="-216" y="-200"/></transition><transition action=""><source ref="id10"/><target ref="id8"/><label kind="guard" x="-240" y="0">atPitNbr[id]==id</label><label kind="synchronisation" x="-240" y="-16">carInPosition[id-1]!</label><label kind="assignment" x="-240" y="-32">atPitNbr[id]:=0</label></transition><transition controllable="false" action=""><source ref="id10"/><target ref="id9"/><label kind="guard" x="-24" y="-8">isThereACrash()==1</label><label kind="comments">problem</label></transition></template><system>// List one or more processes to be composed into a system.
+/*
+Pitnum(const pit_t t) = Pit(t);
+Mech0(const mech_t t) = Mechanic(t);
+Mech1(const mech_t t) = Mechanic(t);
+Mech2(const mech_t t) = Mechanic(t);
+
+
+Mech0 = Mechanic(0);
+Mech1 = Mechanic(1);
+Mech2 = Mechanic(2);
+Mech3 = Mechanic(3);
+*/
+
+system 
+	Pit, Mechanic;</system></nta>
