@@ -1,21 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'><nta><declaration>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'><nta><declaration>const int PITS = 5;
+const int MECH = PITS*4; 
+const int AverageTimeToGetAWheelReady = 3;
 
-const int mechanics = 4; 
-const int pits = 3;
+int atPitNbr[PITS+1];
+broadcast chan carInPosition[PITS], wheelsReady[PITS];
+bool wheels[MECH], leaving[PITS];
+clock clocks[PITS];</declaration><template><name x="5" y="5">Mechanic</name><parameter>int[0,PITS-1] pitID,int[0,3] mechID</parameter><declaration>bool isLast;
 
-typedef int[pits-1][mechanics-1] mech_t; 
-typedef int[pits-1] pit_t; 
+void setIsLast()
+{
+	int i, result=0;
+	for(i=pitID*4; i&lt;4+pitID*4; ++i)
+	{
+		result+=wheels[i];
+	}
+	isLast=(result==4);
+}</declaration><location id="id0" x="-312" y="-40"><name x="-320" y="-24">Last_To_Be_Ready</name></location><location id="id1" x="-576" y="-272"><name x="-586" y="-302">Wait_For_Last_One</name></location><location id="id2" x="-56" y="200"><name x="-80" y="216">Working</name></location><location id="id3" x="-576" y="200" color="#00ff00"><name x="-624" y="208">Done</name><committed/></location><location id="id4" x="-56" y="-272"><name x="-56" y="-304">mechInPosition</name></location><init ref="id4"/><transition action=""><source ref="id0"/><target ref="id4"/><label kind="synchronisation" x="-328" y="-168">wheelsReady[pitID]!</label></transition><transition action=""><source ref="id1"/><target ref="id4"/><label kind="synchronisation" x="-400" y="-296">wheelsReady[pitID]?</label></transition><transition action=""><source ref="id3"/><target ref="id0"/><label kind="guard" x="-496" y="48">isLast==1</label></transition><transition action=""><source ref="id3"/><target ref="id1"/><label kind="guard" x="-648" y="-48">isLast==0</label></transition><transition action=""><source ref="id4"/><target ref="id2"/><label kind="synchronisation" x="-48" y="-80">carInPosition[pitID]?</label></transition><transition action=""><source ref="id2"/><target ref="id3"/><label kind="assignment" x="-424" y="200">wheels[mechID+pitID*4]:=1, 
+setIsLast()</label></transition></template><template><name>Pit</name><parameter>int[1, PITS] id</parameter><declaration>int position=-1;
 
-
-bool finished[mechanics];
-chan ready[mechanics]; </declaration><template><name x="5" y="5">Mechanic</name><parameter>const mech_t wheel </parameter><declaration>
-void finish(){
-  finished[wheel] = true;
+void driveForward()
+{
+	if(position==-1 &amp;&amp; atPitNbr[0]==0)
+	{
+		atPitNbr[0]=id;
+		position=0;
+	}else if(position==PITS)
+	{
+		atPitNbr[position]=0;
+		position=-1;
+	}else
+	{
+		if(atPitNbr[position+1]==0)
+		{
+			atPitNbr[position+1]=id;
+			atPitNbr[position]=0;
+			position++;
+		}
+	}
 }
-</declaration><location id="id0" x="-40" y="200"><name x="-50" y="170">Working</name></location><location id="id1" x="-40" y="312" color="#ff0000"><name x="-50" y="282">Problems</name></location><location id="id2" x="-296" y="200" color="#00ff00"><name x="-344" y="168">Waiting</name></location><location id="id3" x="72" y="-96"><name x="62" y="-126">Preparing</name></location><location id="id4" x="72" y="104"><name x="40" y="72">In position</name></location><init ref="id2"/><transition><source ref="id2"/><target ref="id3"/></transition><transition action=""><source ref="id4"/><target ref="id0"/><label kind="synchronisation" x="40" y="136">carInPosition?</label></transition><transition action=""><source ref="id0"/><target ref="id2"/><label kind="assignment" x="-200" y="208">finish()</label></transition><transition><source ref="id0"/><target ref="id1"/></transition><transition controllable="false" action=""><source ref="id3"/><target ref="id4"/></transition></template><template><name>Pit</name><parameter>const pit_t car</parameter><declaration>clock t;</declaration><location id="id5" x="-384" y="344"><name x="-424" y="336">Left</name></location><location id="id6" x="-248" y="120"><name x="-232" y="112">Car in position</name></location><location id="id7" x="32" y="32" color="#ff0000"><name x="22" y="2">Crash</name></location><location id="id8" x="-248" y="-104"><name x="-258" y="-134">Incoming Car</name><label kind="invariant" x="-264" y="-88">t&lt;=10</label></location><location id="id9" x="-248" y="344" color="#00ff00"><name x="-258" y="314">Leave</name></location><location id="id10" x="-384" y="-104"><name x="-400" y="-136">Pit Stop</name></location><init ref="id10"/><transition><source ref="id6"/><target ref="id9"/></transition><transition controllable="false" action=""><source ref="id5"/><target ref="id10"/><label kind="assignment" x="-452" y="120">leaving[car]=0</label></transition><transition action=""><source ref="id9"/><target ref="id5"/><label kind="assignment" x="-352" y="344">leaving[car]=1</label></transition><transition action=""><source ref="id9"/><target ref="id7"/><label kind="guard" x="-120" y="232">incoming[car+1]==1</label></transition><transition action=""><source ref="id8"/><target ref="id6"/><label kind="guard" x="-304" y="-32">t&gt;=5</label><label kind="synchronisation" x="-328" y="24">carInPosition!</label><label kind="assignment" x="-344" y="-8">incoming[car]=0</label></transition><transition action=""><source ref="id8"/><target ref="id7"/><label kind="guard" x="-136" y="-80">leaving[car-1]==1
-t&lt;5</label><label kind="comments">problem</label></transition><transition controllable="false" action=""><source ref="id10"/><target ref="id8"/><label kind="assignment" x="-376" y="-104">incoming[car]=1
-t=0</label></transition></template><system>// Place template instantiations here.
-Process = Template();
 
-// List one or more processes to be composed into a system.
-system Process;</system></nta>
+bool isThereACrash()
+{
+	if(position&gt;=1)
+		return atPitNbr[position]==-1;
+	return 0;
+}
+
+void goOnLane()
+{
+	if(position&gt;=1)
+	{
+		if(leaving[position-1] &amp;&amp; atPitNbr[position]!=id)
+		{
+			atPitNbr[position]=-1;
+		}else
+		{
+			atPitNbr[id]=id;
+		}
+	}
+}</declaration><location id="id5" x="-248" y="120"><name x="-240" y="80">CarInPos</name></location><location id="id6" x="168" y="112" color="#ff0000"><name x="158" y="82">Crash</name></location><location id="id7" x="-248" y="-104"><name x="-352" y="-128">IncomingCar</name></location><location id="id8" x="-248" y="376" color="#00ff00"><name x="-312" y="360">Leave</name></location><init ref="id7"/><transition controllable="false" action=""><source ref="id8"/><target ref="id7"/><label kind="guard" x="-608" y="32">position==-1</label><label kind="assignment" x="-608" y="16">leaving[id-1]:=0</label><nail x="-264" y="360"/><nail x="-624" y="120"/></transition><transition controllable="false" action=""><source ref="id8"/><target ref="id6"/><label kind="guard" x="-40" y="256">isThereACrash()==1</label><nail x="-232" y="368"/></transition><transition action=""><source ref="id8"/><target ref="id8"/><label kind="guard" x="-288" y="496">position!=-1 &amp;&amp; 
+isThereACrash()==0</label><label kind="assignment" x="-288" y="480">driveForward()</label><nail x="-288" y="472"/><nail x="-208" y="472"/></transition><transition action=""><source ref="id7"/><target ref="id7"/><label kind="guard" x="-280" y="-240">position!=id &amp;&amp;
+isThereACrash()==0</label><label kind="assignment" x="-280" y="-256">driveForward()</label><nail x="-280" y="-200"/><nail x="-216" y="-200"/></transition><transition action=""><source ref="id5"/><target ref="id8"/><label kind="synchronisation" x="-376" y="192">wheelsReady[id-1]?</label><label kind="assignment" x="-352" y="160">leaving[id-1]:=1,
+goOnLane()</label></transition><transition action=""><source ref="id7"/><target ref="id5"/><label kind="guard" x="-240" y="0">atPitNbr[id]==id</label><label kind="synchronisation" x="-240" y="-16">carInPosition[id-1]!</label><label kind="assignment" x="-240" y="-48">clocks[id-1]:=0,
+atPitNbr[id]:=0</label></transition><transition controllable="false" action=""><source ref="id7"/><target ref="id6"/><label kind="guard" x="-8" y="-8">isThereACrash()==1</label><label kind="comments">problem</label></transition></template><system>// List one or more processes to be composed into a system.
+/*
+Pitnum(const pit_t t) = Pit(t);
+Mech0(const mech_t t) = Mechanic(t);
+Mech1(const mech_t t) = Mechanic(t);
+Mech2(const mech_t t) = Mechanic(t);
+
+
+Mech0 = Mechanic(0);
+Mech1 = Mechanic(1);
+Mech2 = Mechanic(2);
+Mech3 = Mechanic(3);
+*/
+
+system 
+	Pit, Mechanic;</system></nta>
