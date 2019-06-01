@@ -1,4 +1,35 @@
-//This file was generated from (Academic) UPPAAL 4.1.4 (rev. 5648), July 2014
+//This file was generated from (Academic) UPPAAL 4.1.4 (rev. 5535), March 2014
+
+/*
+
+*/
+E<> Pit0.Crash
+
+/*
+
+*/
+A<> Mech01.isLast == 1 imply Mech02.isLast == 0
+
+/*
+
+*/
+A[ ] not (Mech00.Wait_For_Last_One and Mech01.Wait_For_Last_One and Mech02.Wait_For_Last_One and Mech03.Wait_For_Last_One)\
+
+
+/*
+
+*/
+E<> not (Mech00.Wait_For_Last_One and Mech01.Wait_For_Last_One and Mech02.Wait_For_Last_One and Mech03.Wait_For_Last_One)
+
+/*
+No car can be locked more than 2 times straight
+*/
+A<> nbrOfTimesLocked[0]>2 or  nbrOfTimesLocked[1]>2 or  nbrOfTimesLocked[2]>2
+
+/*
+A mechanic cannot be Waiting for the last one and the last one at the same time
+*/
+A<> Mech01.Wait_For_Last_One imply not Mech01.Last_To_Be_Ready
 
 /*
 if the car from pit 1 is in front of the pit2 then the pit 2 must be locked by the car from pit 1
