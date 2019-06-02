@@ -23,4 +23,9 @@ A<> not(MainPit.crash)
 /*
 
 */
+control_t*(6000, 6000): A[ not(MainPit.crash) U MainPit.outside ]
+
+/*
+
+*/
 //NO_QUERY
