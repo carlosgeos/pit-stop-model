@@ -33,7 +33,7 @@ E<> control: A[ not(MainPit.waiting_exit) U MainPit.leaving ]
 /*
 control t...
 */
-control_t*(50000, 0): A<> MainPit.ready_to_leave
+control_t*(50000, 0): A<> MainPit.leaving
 
 /*
 
