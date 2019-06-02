@@ -1,29 +1,39 @@
 //This file was generated from (Academic) UPPAAL 4.1.4 (rev. 5648), July 2014
 
 /*
-With some help from the environment, all traces lead to safety outside the pit lane
+
 */
-E<> control: A<> MainPit.outside
+//NO_QUERY
 
 /*
 
 */
-E<> MainPit.outside
-
-/*
-
-*/
-A[] not deadlock
+control: A<> MainPit.leave
 
 /*
 All traces do not lead to safety outside the pit lane
 */
-A<> not(MainPit.crash)
+E<> control: A<> MainPit.leave
 
 /*
 
 */
-control_t*(6000, 6000): A[ not(MainPit.crash) U MainPit.outside ]
+control: A[ (forall (i: mechId_t) not(Mechanic(i).delay)) U MainPit.leave ]
+
+/*
+
+*/
+E<> control: A[ (forall (i: mechId_t) not(Mechanic(i).delay)) U MainPit.leave ]
+
+/*
+
+*/
+control_t*(120, 120): E<> : A[ not(MainPit.crash) U MainPit.leave ]
+
+/*
+
+*/
+control_t*(120, 120): A<> MainPit.leave
 
 /*
 
