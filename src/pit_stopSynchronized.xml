@@ -115,22 +115,22 @@ Mech1(const mech_t t) = Mechanic(t);
 Mech2(const mech_t t) = Mechanic(t);
 */
 
-Pit0 = Pit(1);
-Mech00 = Mechanic(0,0);
-Mech01 = Mechanic(0,1);
-Mech02 = Mechanic(0,2);
-Mech03 = Mechanic(0,3);
-Pit1 = Pit(2);
-Mech10 = Mechanic(1,0);
-Mech11 = Mechanic(1,1);
-Mech12 = Mechanic(1,2);
-Mech13 = Mechanic(1,3);
-Pit2 = Pit(3);
-Mech20 = Mechanic(2,0);
-Mech21 = Mechanic(2,1);
-Mech22 = Mechanic(2,2);
-Mech23 = Mechanic(2,3);
+Pit1 = Pit(1);
+Mech10 = Mechanic(0,0);
+Mech11 = Mechanic(0,1);
+Mech12 = Mechanic(0,2);
+Mech13 = Mechanic(0,3);
+Pit2 = Pit(2);
+Mech20 = Mechanic(1,0);
+Mech21 = Mechanic(1,1);
+Mech22 = Mechanic(1,2);
+Mech23 = Mechanic(1,3);
+Pit3 = Pit(3);
+Mech30 = Mechanic(2,0);
+Mech31 = Mechanic(2,1);
+Mech32 = Mechanic(2,2);
+Mech33 = Mechanic(2,3);
 
 
 system 
-	Pit0, Mech00, Mech01, Mech02, Mech03, Pit1, Mech10, Mech11, Mech12, Mech13, Pit2, Mech20, Mech21, Mech22, Mech23;</system></nta>
+	Pit3, Mech30, Mech31, Mech32, Mech33, Pit1, Mech10, Mech11, Mech12, Mech13, Pit2, Mech20, Mech21, Mech22, Mech23;</system></nta>

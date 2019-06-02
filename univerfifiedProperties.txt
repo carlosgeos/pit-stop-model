@@ -1,0 +1,5 @@
+A[] not (Mech00.Wait_For_Last_One and Mech01.Wait_For_Last_One and Mech02.Wait_For_Last_One and Mech03.Wait_For_Last_One)
+
+E<> (Mech00.Wait_For_Last_One and Mech01.Wait_For_Last_One and Mech02.Wait_For_Last_One and Mech03.Wait_For_Last_One)
+
+E<> Pit0.Crash
