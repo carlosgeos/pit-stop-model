@@ -1,4 +1,4 @@
-//This file was generated from (Academic) UPPAAL 4.1.4 (rev. 5535), March 2014
+//This file was generated from (Academic) UPPAAL 4.1.4 (rev. 5648), July 2014
 
 /*
 
@@ -13,7 +13,7 @@ A<> Mech01.isLast == 1 imply Mech02.isLast == 0
 /*
 
 */
-A[ ] not (Mech00.Wait_For_Last_One and Mech01.Wait_For_Last_One and Mech02.Wait_For_Last_One and Mech03.Wait_For_Last_One)\
+A[] not (Mech00.Wait_For_Last_One and Mech01.Wait_For_Last_One and Mech02.Wait_For_Last_One and Mech03.Wait_For_Last_One)\
 
 
 /*
