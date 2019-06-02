@@ -15,7 +15,7 @@ void setIsLast()
 		result+=wheels[i];
 	}
 	isLast=(result==4);
-}</declaration><location id="id0" x="-312" y="-40"><name x="-320" y="-24">Last_To_Be_Ready</name></location><location id="id1" x="-576" y="-272"><name x="-586" y="-302">Wait_For_Last_One</name></location><location id="id2" x="-56" y="200"><name x="-80" y="216">Working</name></location><location id="id3" x="-576" y="200" color="#00ff00"><name x="-624" y="208">Done</name><committed/></location><location id="id4" x="-56" y="-272"><name x="-56" y="-304">mechInPosition</name></location><init ref="id4"/><transition action=""><source ref="id0"/><target ref="id4"/><label kind="synchronisation" x="-328" y="-168">wheelsReady[pitID]!</label></transition><transition action=""><source ref="id1"/><target ref="id4"/><label kind="synchronisation" x="-400" y="-296">wheelsReady[pitID]?</label></transition><transition action=""><source ref="id3"/><target ref="id0"/><label kind="guard" x="-496" y="48">isLast==1</label></transition><transition action=""><source ref="id3"/><target ref="id1"/><label kind="guard" x="-648" y="-48">isLast==0</label></transition><transition action=""><source ref="id4"/><target ref="id2"/><label kind="synchronisation" x="-48" y="-80">carInPosition[pitID]?</label></transition><transition action=""><source ref="id2"/><target ref="id3"/><label kind="assignment" x="-424" y="200">wheels[mechID+pitID*4]:=1, 
+}</declaration><location id="id0" x="-312" y="-40"><name x="-320" y="-24">Last_To_Be_Ready</name></location><location id="id1" x="-576" y="-272"><name x="-586" y="-302">Wait_For_Last_One</name></location><location id="id2" x="-56" y="200"><name x="-80" y="216">Working</name></location><location id="id3" x="-576" y="200" color="#00ff00"><name x="-624" y="208">Done</name><committed/></location><location id="id4" x="-56" y="-272"><name x="-56" y="-304">mechInPosition</name></location><init ref="id4"/><transition action=""><source ref="id0"/><target ref="id4"/><label kind="synchronisation" x="-328" y="-168">wheelsReady[pitID]!</label></transition><transition action=""><source ref="id1"/><target ref="id4"/><label kind="synchronisation" x="-400" y="-296">wheelsReady[pitID]?</label></transition><transition action=""><source ref="id3"/><target ref="id0"/><label kind="guard" x="-496" y="48">isLast==1</label></transition><transition action=""><source ref="id3"/><target ref="id1"/><label kind="guard" x="-648" y="-48">isLast==0</label></transition><transition action=""><source ref="id4"/><target ref="id2"/><label kind="synchronisation" x="-48" y="-80">carInPosition[pitID]?</label></transition><transition controllable="false" action=""><source ref="id2"/><target ref="id3"/><label kind="assignment" x="-424" y="200">wheels[mechID+pitID*4]:=1, 
 setIsLast()</label></transition></template><template><name>Pit</name><parameter>int[1, PITS] id</parameter><declaration>int position=-1;
 
 void driveForward()
@@ -68,13 +68,25 @@ Pitnum(const pit_t t) = Pit(t);
 Mech0(const mech_t t) = Mechanic(t);
 Mech1(const mech_t t) = Mechanic(t);
 Mech2(const mech_t t) = Mechanic(t);
-
-
-Mech0 = Mechanic(0);
-Mech1 = Mechanic(1);
-Mech2 = Mechanic(2);
-Mech3 = Mechanic(3);
 */
 
+
+Pit0 = Pit(1);
+Mech00 = Mechanic(0,0);
+Mech01 = Mechanic(0,1);
+Mech02 = Mechanic(0,2);
+Mech03 = Mechanic(0,3);
+Pit1 = Pit(2);
+Mech10 = Mechanic(1,0);
+Mech11 = Mechanic(1,1);
+Mech12 = Mechanic(1,2);
+Mech13 = Mechanic(1,3);
+Pit2 = Pit(3);
+Mech20 = Mechanic(2,0);
+Mech21 = Mechanic(2,1);
+Mech22 = Mechanic(2,2);
+Mech23 = Mechanic(2,3);
+
+
 system 
-	Pit, Mechanic;</system></nta>
+	Pit0, Mech00, Mech01, Mech02, Mech03, Pit1, Mech10, Mech11, Mech12, Mech13, Pit2, Mech20, Mech21, Mech22, Mech23;</system></nta>
