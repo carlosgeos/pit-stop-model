@@ -3,37 +3,37 @@
 /*
 
 */
-control: A<> MainPit.leaving
+control: A<> Pit.leaving
 
 /*
 
 */
-control: A[ not(MainPit.crash) U MainPit.leaving ] 
+control: A[ not(Pit.crash) U Pit.leaving ] 
 
 /*
 
 */
-control: A[ (forall (i: mechId_t) not(Mechanic(i).delay)) U MainPit.leaving ]
+control: A[ (forall (i: mechId_t) not(Mechanic(i).delay)) U Pit.leaving ]
 
 /*
 
 */
-E<> control: A[ (forall (i: mechId_t) not(Mechanic(i).delay)) U MainPit.leaving ]
+E<> control: A[ (forall (i: mechId_t) not(Mechanic(i).delay)) U Pit.leaving ]
 
 /*
 
 */
-control: A[ not(MainPit.waiting_exit) U MainPit.leaving ]
+control: A[ not(Pit.waiting_exit) U Pit.leaving ]
 
 /*
 
 */
-E<> control: A[ not(MainPit.waiting_exit) U MainPit.leaving ]
+E<> control: A[ not(Pit.waiting_exit) U Pit.leaving ]
 
 /*
 control t...
 */
-control_t*(50000, 0): A<> MainPit.leaving
+control_t*(50000, 0): A<> Pit.leaving
 
 /*
 
