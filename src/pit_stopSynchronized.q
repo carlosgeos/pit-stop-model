@@ -1,6 +1,11 @@
 //This file was generated from (Academic) UPPAAL 4.1.4 (rev. 5648), July 2014
 
 /*
+
+*/
+Pit1.Wait_To_Go_On_Lane --> Pit1.Leave
+
+/*
 no deadlock
 */
 E<> deadlock
@@ -34,11 +39,6 @@ control: A<> Pit1.Wait_To_Go_On_Lane imply Pit1.Leave
 FAIRNESS: all car can reach its position
 */
 control: A<>Pit1.Incoming_Car imply Pit1.CarInPos
-
-/*
-LIVENESS: all car coming in goes out in the future
-*/
-control: A<>Pit1.CarInPos imply Pit1.Leave
 
 /*
 SAFETY: if the car from pit 1 is in front of the pit2 then the pit 2 must be locked by the car from pit1

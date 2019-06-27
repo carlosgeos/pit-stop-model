@@ -33,7 +33,7 @@ E<> control: A[ not(Pit.waiting_exit) U Pit.leaving ]
 /*
 control t...
 */
-control_t*(50000, 0): A<> Pit.leaving
+control_t*(28901, 0): A<> Pit.leaving
 
 /*
 
